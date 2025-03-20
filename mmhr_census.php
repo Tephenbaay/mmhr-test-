@@ -112,21 +112,26 @@ while ($row = $result->fetch_assoc()) {
     $discharge_result = $conn->query($discharge_query);
 
     while ($row = $discharge_result->fetch_assoc()) {
-        $discharge_day = (int)date('d', strtotime($row['date_discharge'])) - 1; 
+        $discharge_day = (int)date('d', strtotime($row['date_discharge'])); 
         $category = strtolower($row['category']);
 
         if ($discharge_day >= 1 && $discharge_day <= 31) {
+            if (!isset($summary[$discharge_day])) {
+                $summary[$discharge_day] = [
+                    'total_discharges_non_nhip' => 0,
+                    'total_discharges_nhip' => 0
+                ];
+            }
             if (strpos($category, 'non phic') !== false) {
                 $summary[$discharge_day]['total_discharges_non_nhip'] += 1;
             } else {
-                $summary[$discharge_day]['total_discharges_nhip'] += 1; 
+                $summary[$discharge_day]['total_discharges_nhip'] += 1;
             }
         }
     }
 
     $non_nhip_query = "SELECT date_admitted, date_discharge, category FROM patient_records_3 WHERE sheet_name_3 = '$selected_sheet_3'";
     $non_nhip_result = $conn->query($non_nhip_query);
-
     while ($row = $non_nhip_result->fetch_assoc()) {
         $admit = new DateTime($row['date_admitted']);
         $discharge = new DateTime($row['date_discharge']);
