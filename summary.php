@@ -39,20 +39,30 @@ if (isset($_GET['file_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="sige\">
     <title>MMHR Summary</title>
 </head>
 <body>
-    <h2>Select Sheet</h2>
-    <form action="display_summary.php" method="GET">
-        <input type="hidden" name="file_id" value="<?= $file_id ?>">
+    <aside>
+        <div class="sidebar">
+            <h2>Select Sheet</h2>
+            <form action="display_summary.php" method="GET">
+                <input type="hidden" name="file_id" value="<?= $file_id ?>">
 
-        <label for="sheet">Select Main Sheet:</label>
-        <select name="sheet_name" id="sheet">
-            <?php foreach ($sheets as $sheet): ?>
-                <option value="<?= $sheet ?>"><?= $sheet ?></option>
-            <?php endforeach; ?>
-        </select>
+                <label for="sheet">Select Main Sheet:</label>
+            <select name="sheet_name" id="sheet">
+                    <?php foreach ($sheets as $sheet): ?>
+                        <option value="<?= $sheet ?>"><?= $sheet ?></option>
+                    <?php endforeach; ?>
+            </select>
+        </div>
+    </aside>
 
+    <nav class="navbar">
+        <h1>BMCI</h1>
+    </nav>
+
+    <div class="content">
         <label for="sheet_2">Select Admission Sheet:</label>
         <select name="sheet_name_2" id="sheet_2">
             <option value="" disabled selected>Select Admission Sheet</option>
@@ -60,8 +70,8 @@ if (isset($_GET['file_id'])) {
                 <option value="<?= $sheet ?>"><?= $sheet ?></option>
             <?php endforeach; ?>
         </select>
-
         <button type="submit">Load Summary</button>
     </form>
+    </div>
 </body>
 </html>
