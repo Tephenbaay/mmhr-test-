@@ -18,7 +18,6 @@ if ($conn->connect_error) {
 $files = $conn->query("SELECT * FROM uploaded_files");
 
 $totalFiles = $files->num_rows;
-$maxFilesAllowed = 10; // Set limit here
 
 ?>
 

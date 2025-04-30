@@ -20,8 +20,8 @@ if ($conn->connect_error) {
 $result = $conn->query("SELECT max_upload_files, max_file_size_mb, allowed_file_extensions FROM settings WHERE id = 1");
 $settings = $result->fetch_assoc();
 
-$maxFilesAllowed = (int)($settings['max_upload_files'] ?? 10);
-$maxFileSizeMB = (int)($settings['max_file_size_mb'] ?? 5);
+$maxFilesAllowed = (int)($settings['max_upload_files']);
+$maxFileSizeMB = (int)($settings['max_file_size_mb']);
 $allowedExtensions = explode(',', $settings['allowed_file_extensions'] ?? 'xlsx,xls');
 $maxFileSize = $maxFileSizeMB * 1024 * 1024;
 
