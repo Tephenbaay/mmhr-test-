@@ -15,38 +15,19 @@ $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-// (2) Fetch and enforce settings
-function getSetting($conn, $key) {
-    $stmt = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
-    if (!$stmt) {
-        die("Prepare failed: " . $conn->error);
-    }
 
-    $stmt->bind_param("s", $key);
-    $stmt->execute();
-    $stmt->store_result();
+// (2) Fetch settings from the `settings` table
+$result = $conn->query("SELECT max_upload_files, max_file_size_mb, allowed_file_extensions FROM settings WHERE id = 1");
+$settings = $result->fetch_assoc();
 
-    $value = null;  // ✅ Initialize before binding
-    $stmt->bind_result($value);
-
-    if ($stmt->num_rows > 0 && $stmt->fetch()) {
-        return $value;
-    } else {
-        return null;
-    }
-
-    $stmt->close(); // unreachable, but for good practice move before return if needed
-}
-
-// --- Set limits ---
-$maxFilesAllowed = (int)(getSetting($conn, 'max_upload_files') ?? 10);
-$maxFileSizeMB = (int)(getSetting($conn, 'max_file_size_mb') ?? 5);
-$allowedExtensions = explode(',', getSetting($conn, 'allowed_file_extensions') ?? 'xlsx,xls');
+$maxFilesAllowed = (int)($settings['max_upload_files'] ?? 10);
+$maxFileSizeMB = (int)($settings['max_file_size_mb'] ?? 5);
+$allowedExtensions = explode(',', $settings['allowed_file_extensions'] ?? 'xlsx,xls');
 $maxFileSize = $maxFileSizeMB * 1024 * 1024;
 
 // (3) Enforce max file size
-if ($_FILES['excelFile']['size'] > ($maxSizeMB * 1024 * 1024)) {
-    die("File too large. Max: {$maxSizeMB}MB");
+if ($_FILES['excelFile']['size'] > $maxFileSize) {
+    die("File too large. Max: {$maxFileSizeMB}MB");
 }
 
 // (4) Enforce allowed file extensions
@@ -55,11 +36,11 @@ if (!in_array($ext, $allowedExtensions)) {
     die("Invalid file extension. Allowed: " . implode(', ', $allowedExtensions));
 }
 
-// (5) Optional: Enforce max number of files in DB
+// (5) Enforce max number of files in the DB
 $result = $conn->query("SELECT COUNT(*) AS total FROM uploaded_files");
 $row = $result->fetch_assoc();
-if ((int)$row['total'] >= $maxFiles) {
-    die("Maximum number of uploaded files reached. Limit: {$maxFiles}");
+if ((int)$row['total'] >= $maxFilesAllowed) {
+    die("Maximum number of uploaded files reached. Limit: {$maxFilesAllowed}");
 }
 
 // --- Utility: Convert Excel date ---
