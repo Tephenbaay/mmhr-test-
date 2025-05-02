@@ -8,6 +8,40 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+if (isset($_POST['add_maintenance'])) {
+  $log = $conn->real_escape_string($_POST['maintenance_log']);
+  $conn->query("INSERT INTO maintenance_logs (log) VALUES ('$log')");
+  header("Location: admin_dashboard.php");
+  exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['reset_system'])) {
+      // Example: Truncate certain tables
+      $conn->query("TRUNCATE TABLE patient_records");
+      $conn->query("TRUNCATE TABLE patient_records_2");
+      $conn->query("TRUNCATE TABLE patient_records_3");
+      $conn->query("TRUNCATE TABLE leading_causes");
+      $conn->query("TRUNCATE TABLE admin_notes");
+      $conn->query("TRUNCATE TABLE updates_log");
+      $conn->query("INSERT INTO system_logs (action, performed_by) VALUES ('System reset', '$admin')");
+      echo "<script>alert('System data has been reset.');</script>";
+  }
+
+  if (isset($_POST['delete_uploads'])) {
+      $upload_dir = 'uploads/';
+      $files = glob($upload_dir . '*');
+
+      foreach ($files as $file) {
+          if (is_file($file)) {
+              unlink($file);
+          }
+      }
+      $conn->query("INSERT INTO system_logs (action, performed_by) VALUES ('Deleted all uploads', '$admin')");
+      echo "<script>alert('All uploaded files have been deleted.');</script>";
+  }
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -61,6 +95,13 @@ if (isset($_POST['save_note'])) {
   $stmt->bind_param("s", $note);
   $stmt->execute();
 }
+
+$total_space = disk_total_space("C:");  // or "/" on Linux
+$free_space = disk_free_space("C:");
+$used_space = $total_space - $free_space;
+
+$used_percent = ($used_space / $total_space) * 100;
+$used_percent = round($used_percent, 2);
 
 ?>
 
@@ -149,23 +190,82 @@ if (isset($_POST['save_note'])) {
 
     <!-- Maintenance Card -->
     <div class="card">
-      <h2>🛠️ Maintenance</h2>
-      <p>Backup logs, server restarts, and scheduled maintenance notes.</p>
-    </div>
+  <h2>🛠️ Maintenance</h2>
+  <form action="admin_dashboard.php" method="POST" style="margin-bottom: 15px;">
+    <textarea name="maintenance_log" rows="3" placeholder="Add maintenance note..." required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+    <button type="submit" name="add_maintenance" style="margin-top: 10px; padding: 8px 16px; background: #007BFF; color: white; border: none; border-radius: 5px;">Add Log</button>
+  </form>
+
+  <div class="table-container">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Log</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+          $result = $conn->query("SELECT * FROM maintenance_logs ORDER BY created_at DESC");
+          while ($log = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>{$log['id']}</td>
+                    <td>{$log['log']}</td>
+                    <td>{$log['created_at']}</td>
+                    <td>
+                      <a href='delete_maintenance.php?id={$log['id']}' class='delete-btn' onclick='return confirm(\"Delete this maintenance log?\")'>Delete</a>
+                    </td>
+                  </tr>";
+          }
+        ?>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <!-- Storage Graph Card -->
     <div class="card">
-      <h2>📊 Storage Graph</h2>
-      <div class="graph">
-        Example Usage Graph: 60% Used
-      </div>
-    </div>
+  <h2>📊 Storage Graph</h2>
+  <p>Total Space: <?php echo round($total_space / 1_073_741_824, 2); ?> GB</p>
+  <p>Used: <?php echo round($used_space / 1_073_741_824, 2); ?> GB (<?php echo $used_percent; ?>%)</p>
+
+  <div class="graph-bar-container">
+    <div class="graph-bar-used" style="width: <?php echo $used_percent; ?>%;"></div>
+  </div>
+</div>
 
     <!-- Admin-Only Actions Card (Restricted) -->
     <div class="card restricted">
-      <h2>🔐 Admin-Only Actions</h2>
-      <p>Reset system, delete uploads, manage permissions.</p>
-    </div>
+  <h2>🔐 Admin-Only Actions</h2>
+  <form method="POST" onsubmit="return confirm('Are you sure? This action cannot be undone.');">
+    <button type="submit" name="reset_system" class="admin-btn">🔄 Reset System</button>
+    <button type="submit" name="delete_uploads" class="admin-btn">🗑️ Delete Uploads</button>
+    <a href="#user-management" class="admin-btn-link">🔧 Manage Permissions</a>
+  </form>
+</div>
+
+<div class="card">
+  <h2>📁 System Logs</h2>
+  <table class="user-table">
+    <thead>
+      <tr><th>Timestamp</th><th>Action</th><th>Performed By</th></tr>
+    </thead>
+    <tbody>
+      <?php
+        $logs = $conn->query("SELECT * FROM system_logs ORDER BY timestamp DESC");
+        while ($log = $logs->fetch_assoc()) {
+          echo "<tr>
+                  <td>{$log['timestamp']}</td>
+                  <td>{$log['action']}</td>
+                  <td>{$log['performed_by']}</td>
+                </tr>";
+        }
+      ?>
+    </tbody>
+  </table>
+</div>
 
     <!-- Admin Notes Card -->
     <div class="card">
@@ -176,7 +276,6 @@ if (isset($_POST['save_note'])) {
         <br><br>
         <button type="submit" name="save_note" style="padding: 8px 16px; background-color: #1e3a8a; color: white; border: none; border-radius: 4px;">Save Note</button>
       </form>
-
     </div>
 
     <!-- Manage Users Card -->

@@ -303,4 +303,70 @@ body {
   background-color: #004085;
 }
 
-  
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.user-table th, .user-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+.user-table th {
+  background-color: #f2f2f2;
+}
+.delete-btn {
+  color: red;
+  text-decoration: none;
+}
+
+.graph-bar-container {
+  width: 100%;
+  height: 25px;
+  background-color: #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.graph-bar-used {
+  height: 100%;
+  background: linear-gradient(90deg, #007BFF, #00C0FF);
+  text-align: right;
+  line-height: 25px;
+  color: white;
+  padding-right: 8px;
+  border-radius: 12px 0 0 12px;
+}
+
+.admin-btn {
+  margin: 8px 4px;
+  padding: 10px 16px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.admin-btn:hover {
+  background-color: #dc2626;
+}
+
+.admin-btn-link {
+  display: inline-block;
+  margin: 8px 4px;
+  padding: 10px 16px;
+  background-color: #4b5563;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.admin-btn-link:hover {
+  background-color: #374151;
+}
