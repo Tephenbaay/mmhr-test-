@@ -791,17 +791,24 @@ function openOptionsPopup(title, description) {
     } else if (title === '📝 Admin Notes / Logs') {
     document.getElementById('popupTitle').innerText = '📝 Admin Notes / Logs';
 
-    content = `
-        <form id="adminNotesForm">
-            <label for="admin_notes">System Notes:</label><br>
-            <textarea name="admin_notes" rows="6" style="width: 100%;"></textarea><br><br>
-        </form>
+    fetch('get_admin_notes.php')
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('popupTitle').innerText = '📝 Admin Notes / Logs';
+        if (data.length === 0) {
+            content = `<p>No admin notes available.</p>`;
+        } else {
+            content = data.map(note => `
+                <div style="margin-bottom: 15px;">
+                    <strong>${note.created_at}</strong><br>
+                    <p style="white-space: pre-wrap;">${note.note}</p>
+                    <hr>
+                </div>
+            `).join('');
+        }
 
-        <div style="text-align: right;">
-                <button type="submit" id="adminNotesForm" style="padding: 8px 16px; background: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Save</button>
-        </div>
-        <div id="adminNotesFeedback" style="margin-top: 10px; font-size: 13px; color: green;"></div>
-    `;
+        document.getElementById('popupContent').innerHTML = content;
+    });
 
     fetch('get_admin_notes.php')
     .then(res => res.json())

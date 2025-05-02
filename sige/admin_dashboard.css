@@ -1,0 +1,306 @@
+body {
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    background-color: #f4f4f4;
+  }
+
+  .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #2f4f4f;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  }
+
+  .navbar h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  .navbar div {
+      margin-right: 35px;
+  }
+
+  .sidebar {
+    width: 220px;
+    background-color: #1e293b;
+    color: white;
+    position: fixed;
+    top: 60px;
+    bottom: 0;
+    padding: 20px;
+  }
+
+  .sidebar a {
+    color: white;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+
+  .sidebar a:hover {
+    background-color: #334155;
+  }
+
+  .main-content {
+    margin-left: 240px;
+    padding: 20px;
+    margin-top:70px;
+  }
+
+  .card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card h2 {
+    margin-top: 0;
+  }
+
+  .graph {
+    height: 200px;
+    background: linear-gradient(90deg, #4ade80, #facc15);
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    justify-content: center;
+    color: #1f2937;
+    font-weight: bold;
+  }
+
+  .restricted {
+    background-color: #fee2e2;
+    border: 1px solid #f87171;
+  }
+
+  .form-container {
+    margin-bottom: 30px;
+  }
+  
+  .add-user-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .add-user-form input,
+  .add-user-form select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1 1 200px;
+  }
+  
+  .add-user-form button {
+    background-color: #1e3a8a;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .add-user-form button:hover {
+    background-color: #324caa;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .user-table th,
+  .user-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .user-table th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .user-table tr:hover {
+    background-color: #f0f8ff;
+  }
+  
+  .edit-btn, .delete-btn {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-weight: bold;
+  }
+  
+  .delete-btn {
+    color: #dc2626;
+  }
+  
+  .edit-user-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: #f0f4f8;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    width: 98%;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .edit-user-form input,
+  .edit-user-form select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    flex: 1 1 200px;
+    width:100%;
+  }
+  
+  .edit-user-form button {
+    background-color: #059669;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .edit-user-form button:hover {
+    background-color: #047857;
+  }
+
+  .add-update-form .form-field {
+    margin-bottom: 15px;
+  }
+  
+  .add-update-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .add-update-form input,
+  .add-update-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .submit-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #218838;
+  }
+  
+  .existing-updates ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .existing-updates li {
+    margin-bottom: 15px;
+  }
+  
+  .existing-updates small {
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .existing-updates hr {
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+  }
+  
+  /* Add Success Message */
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Edit and Delete Button Styles */
+.edit-btn, .delete-btn {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  text-decoration: underline;
+}
+
+.delete-btn {
+  color: red;
+}
+
+/* Pagination Styles */
+.pagination {
+  margin-top: 20px;
+}
+
+.pagination a {
+  padding: 8px 16px;
+  margin: 0 5px;
+  background-color: #007BFF;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.pagination a:hover {
+  background-color: #0056b3;
+}
+
+.pagination a:active {
+  background-color: #004085;
+}
+
+  

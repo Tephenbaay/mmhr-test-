@@ -1,9 +1,12 @@
 <?php
-require 'config.php';
+include 'config.php';
+header('Content-Type: application/json');
 
-$stmt = $pdo->query("SELECT admin_notes FROM settings WHERE id = 1");
-$row = $stmt->fetch();
+$result = $conn->query("SELECT note, created_at FROM admin_notes ORDER BY created_at DESC");
 
-echo json_encode([
-    'admin_notes' => $row['admin_notes'] ?? ''
-]);
+$notes = [];
+while ($row = $result->fetch_assoc()) {
+    $notes[] = $row;
+}
+
+echo json_encode($notes);

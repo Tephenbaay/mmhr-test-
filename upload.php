@@ -39,9 +39,7 @@ if (!in_array($ext, $allowedExtensions)) {
 // (5) Enforce max number of files in the DB
 $result = $conn->query("SELECT COUNT(*) AS total FROM uploaded_files");
 $row = $result->fetch_assoc();
-if ((int)$row['total'] >= $maxFilesAllowed) {
-    die("Maximum number of uploaded files reached. Limit: {$maxFilesAllowed}");
-}
+
 
 // --- Utility: Convert Excel date ---
 function convertExcelDate($value) {
