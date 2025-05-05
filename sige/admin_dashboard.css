@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: 'Times New Roman', Times, serif;
@@ -54,9 +58,9 @@ body {
   }
 
   .main-content {
-    margin-left: 240px;
+    margin-left: 260px;
     padding: 20px;
-    margin-top:70px;
+    margin-top:50px;
   }
 
   .card {
@@ -369,4 +373,75 @@ body {
 
 .admin-btn-link:hover {
   background-color: #374151;
+}
+
+.custom-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.custom-btn:hover {
+  background-color: #2563eb;
+}
+
+.quota-form {
+  display: none;
+  margin-top: 10px;
+}
+
+.quota-form input[type="number"] {
+  padding: 6px;
+  width: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 8px;
+}
+
+.custom-save-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.custom-save-btn:hover {
+  background-color: #059669;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  gap: 15px;
+  font-size: 14px;
+}
+
+.pagination a {
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+  background-color: #0056b3;
+}
+
+.pagination span {
+  font-weight: bold;
+  color: #333;
 }
