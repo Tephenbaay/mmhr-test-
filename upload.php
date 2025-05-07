@@ -109,8 +109,8 @@ if (isset($_FILES['excelFile'])) {
         } elseif (stripos($sheetName, 'discharge') !== false) {
             $startRow = 3;
             $colPatientName = "A";
-            $colAdmissionDate = "K";
-            $colDischargeDate = "M";
+            $colAdmissionDate = "J";
+            $colDischargeDate = "L";
             $colCategory = "T";
             $tableName = "patient_records_3";
         } else {
@@ -122,13 +122,16 @@ if (isset($_FILES['excelFile'])) {
             $admissionDate = convertExcelDate(trim($sheet->getCell("{$colAdmissionDate}$rowIndex")->getValue()));
             $dischargeDate = isset($colDischargeDate) ? convertExcelDate(trim($sheet->getCell("{$colDischargeDate}$rowIndex")->getValue())) : null;
 
-
             if (empty($patientName) || empty($admissionDate)) {
                 continue;
             }
 
             if ($tableName === "patient_records_3") {
-                $category = trim($sheet->getCell("{$colCategory}$rowIndex")->getValue());
+                $cell = $sheet->getCell("{$colCategory}$rowIndex");
+                    $category = $cell->isFormula()
+                        ? ($cell->getOldCalculatedValue() ?: '#N/A')
+                        : $cell->getValue();
+                    $category = trim($category);
                 
                 $batchData[] = "($fileId, '$sheetName', '$admissionDate', " . 
                     (!empty($dischargeDate) ? "'$dischargeDate'" : "NULL") . ", " . 
@@ -136,7 +139,10 @@ if (isset($_FILES['excelFile'])) {
 
             } elseif ($tableName === "patient_records_2") {
                 $cell = $sheet->getCell("{$colMemberCategory}$rowIndex");
-                $memberCategory = $cell->getCalculatedValue(); 
+                $memberCategory = $cell->isFormula()
+                    ? ($cell->getOldCalculatedValue() ?: '#N/A')
+                    : $cell->getValue();
+                $memberCategory = trim($memberCategory);
                 $batchData[] = "($fileId, '$sheetName', '$admissionDate', '$patientName', '$memberCategory')";
             } else {
                 $memberCategory = trim($sheet->getCell("{$colMemberCategory}$rowIndex")->getValue());
