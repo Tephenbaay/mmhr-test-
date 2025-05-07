@@ -120,7 +120,8 @@ if (isset($_FILES['excelFile'])) {
         for ($rowIndex = $startRow; $rowIndex <= $highestRow; $rowIndex++) {
             $patientName = trim($sheet->getCell("{$colPatientName}$rowIndex")->getValue());
             $admissionDate = convertExcelDate(trim($sheet->getCell("{$colAdmissionDate}$rowIndex")->getValue()));
-            $dischargeDate = convertExcelDate(trim($sheet->getCell("{$colDischargeDate}$rowIndex")->getValue()));
+            $dischargeDate = isset($colDischargeDate) ? convertExcelDate(trim($sheet->getCell("{$colDischargeDate}$rowIndex")->getValue())) : null;
+
 
             if (empty($patientName) || empty($admissionDate)) {
                 continue;

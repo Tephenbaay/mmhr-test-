@@ -126,13 +126,26 @@ $summary = array_fill(1, 31, [
     'total_discharges_non_nhip' => 0,'lohs_nhip' => 0, 'lohs_non_nhip' => 0
 ]);
 
+    $year_query = $conn->prepare("SELECT file_name FROM uploaded_files WHERE id = ?");
+    $year_query->bind_param("i", $selected_file_id);
+    $year_query->execute();
+    $year_result = $year_query->get_result();
+
+    if ($year_row = $year_result->fetch_assoc()) {
+        $file_name = $year_row['file_name'];
+
+        preg_match('/\b(20\d{2})\b/', $file_name, $matches);
+        $selected_year = isset($matches[1]) ? (int)$matches[1] : date('Y'); 
+    } else {
+        $selected_year = date('Y');
+    }
+
     #column 1-5
     while ($row = $all_sheets_result->fetch_assoc()) {
         $admit = DateTime::createFromFormat('Y-m-d', trim($row['admission_date']))->setTime(0, 0, 0);
         $discharge = DateTime::createFromFormat('Y-m-d', trim($row['discharge_date']))->setTime(0, 0, 0);
         $category = trim(strtolower($row['member_category']));
     
-        $selected_year = 2025;
         $month_numbers = [
             'JANUARY' => 1, 'FEBRUARY' => 2, 'MARCH' => 3, 'APRIL' => 4, 'MAY' => 5, 'JUNE' => 6,
             'JULY' => 7, 'AUGUST' => 8, 'SEPTEMBER' => 9, 'OCTOBER' => 10, 'NOVEMBER' => 11, 'DECEMBER' => 12
@@ -145,7 +158,7 @@ $summary = array_fill(1, 31, [
         $selected_month = $month_numbers[$selected_month_name];
     
         $first_day_of_month = new DateTime("$selected_year-$selected_month-01");
-        $last_day_of_month = new DateTime("$selected_year-$selected_month-" . cal_days_in_month(CAL_GREGORIAN, $selected_month, $selected_year));
+        $last_day_of_month = new DateTime("$selected_year-$selected_month-" . cal_days_in_month(CAL_GREGORIAN, $selected_month, $selected_year));  
     
         if ($admit == $discharge) {
             continue;
